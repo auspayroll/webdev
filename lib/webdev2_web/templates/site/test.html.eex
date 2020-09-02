@@ -1,0 +1,8 @@
+test.html
+
+<%= AuthMe.UserManager.Guardian.config(:secret_key) %>
+
+
+
+Test: <%= Application.get_env(:test, :otp_app) %>
+

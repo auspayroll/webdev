@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Webdev2 · Phoenix Framework</title>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <style>
+      .paginator-list li[disabled] a {
+        opacity: .4;
+        pointer-events: none;
+      }
+
+      ul.paginator-list { text-align: center; }
+      ul.paginator-list li { display: inline-block; margin: 6px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <section class="container">
+      <%=if @current_user do %>
+        <%= link "Index", to: Routes.site_path(@conn, :index) %> 
+        <%= link "Add Site", to: Routes.site_path(@conn, :new) %> 
+        <%= link "Search", to: Routes.site_path(@conn, :search) %>
+        <%= link "logout", to: SessionRoutes.session_path(@conn, :logout) %>
+      <% end %>
+      </section>
+    </header>
+    <main role="main" class="container">
+      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <%= @inner_content %>
+    </main>
+  </body>
+</html>

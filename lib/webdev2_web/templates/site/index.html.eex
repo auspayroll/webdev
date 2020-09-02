@@ -1,0 +1,63 @@
+
+<style>
+  .listing{
+    padding:6px;
+    border-bottom:1pt #cccccc dashed;
+    margin:6px;
+  }
+
+  .control-links a {
+    color: green;
+
+  }
+
+</style>
+<h1>Listing Sites</h1>
+<%= @current_user.username %>
+<%= for site <- @sites.list do %>
+<div class="listing">
+<div><strong><%= site.title %></strong></div>
+<div><%= site.description %></div>
+<div><a href="<%= site.url %>" style="font-size:smaller"><%= site.url %></a>
+</div>
+<div class="control-links"><%= link "Edit", to: Routes.site_path(@conn, :edit, site) %> &nbsp; 
+<%= link "Text", to: Routes.site_path(@conn, :show, site) %> &nbsp; 
+<%= link "Cached", to: Routes.site_path(@conn, :view, site) %> 
+<span style="float:right"><%= format_date(site.inserted_at) %></span>
+</div>
+</div>
+
+<% end %>
+<!---
+<table>
+  <thead>
+    <tr>
+      <th>Tags</th>
+      <th>Title</th>
+      <th>Url</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+
+<%= for site <- @sites.list do %>
+    <tr>
+      <td><%= site.tags %></td>
+      <td><%= site.title %></td>
+      <td><%= site.url %></td>
+
+      <td>
+        <span><%= site.ranking %></span>
+        <span><%= link "Cached", to: Routes.site_path(@conn, :view, site) %></span>
+        <span><%= link "Text", to: Routes.site_path(@conn, :show, site) %></span>
+        <span><%= link "Edit", to: Routes.site_path(@conn, :edit, site) %></span>
+        <span><%= link "Delete", to: Routes.site_path(@conn, :delete, site), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+--->
+<span><%= link "New Site", to: Routes.site_path(@conn, :new) %></span>
+
+<%= Paginator.Helper.render(@conn, @sites, class: "paginator-list") %>

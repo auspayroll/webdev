@@ -1,0 +1,13 @@
+<h2>Search</h2>
+
+<%= form_for @changeset, @action, fn f -> %>
+
+  <div class="form-group">
+    <%= text_input f, :q, class: "form-control" %>
+    <%= error_tag f, :q %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Search", class: "btn btn-primary" %>
+  </div>
+<% end %>

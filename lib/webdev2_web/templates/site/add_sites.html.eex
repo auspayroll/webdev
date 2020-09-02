@@ -1,0 +1,17 @@
+<%= form_for @changeset, @action, [multipart: true, as: :sites], fn f -> %>
+    
+  <%= if !@changeset.valid? do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+    
+  <h2>Add Sites</h2>
+  <%= file_input f, :filename %>
+  <%= error_tag f, :filename %>
+
+  <div>
+    <%= submit "upload" %>
+  </div>
+<% end %>

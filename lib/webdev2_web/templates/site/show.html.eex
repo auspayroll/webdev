@@ -1,0 +1,29 @@
+<h3><%= @site.title %></h3>
+
+<ul>
+
+  <%= @site.description %>
+ 
+
+    <li>
+    <%= @site.url %>
+  </li>
+
+    <li>
+    <strong>Keywords:</strong>
+    <%= @site.tags %>
+  </li>
+
+  <%= for paragraph <- @p do %>
+    <p><%= raw(paragraph) %></p>
+  <% end %>
+
+
+
+
+
+
+</ul>
+
+<span><%= link "Edit", to: Routes.site_path(@conn, :edit, @site) %></span>
+<span><%= link "Back", to: Routes.site_path(@conn, :index) %></span>
