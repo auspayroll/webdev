@@ -3,26 +3,13 @@
 # although such is generally not recommended and you have to
 # remember to add this file to your .gitignore.
 use Mix.Config
-database_host = System.get_env("DATABASE_HOST") || 
-    raise """
-    environment variable DATABASE_HOST is missing.
-    For example: ecto://USER:PASS@HOST/DATABASE
-    """
 
-database_name = System.get_env("DATABASE") || 
-  raise """
-  environment variable DATABASE is missing.
-  For example: ecto://USER:PASS@HOST/DATABASE
-  """
 
-database_password = System.get_env("DATABASE_PASSWORD") || 
-  raise """
-  environment variable DATABASE_PASSWORD is missing.
-  For example: ecto://USER:PASS@HOST/DATABASE
-  """
-
-database_url = "ecto://postgres:"<> database_password <> "@"<>database_host<>"/"<>database_name
-  #System.get_env("DATABASE_URL") ||
+database_url = System.get_env("DATABASE_URL") || 
+raise """
+environment variable DATABASE_URL is missing.
+For example: ecto://USER:PASS@HOST/DATABASE
+"""
 
 
 config :webdev2, Webdev2.Repo,
