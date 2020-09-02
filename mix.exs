@@ -56,7 +56,7 @@ defmodule Webdev2.MixProject do
       {:html_entities, "~> 0.4"},
       {:tzdata, "~> 1.0.3"},
       {:calendar, "~> 1.0.0"},
-      {:auth_me, path: "auth_me" }
+      {:auth_me, git: "https://github.com/auspayroll/auth.git" }
     ]
   end
 
