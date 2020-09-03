@@ -28,13 +28,15 @@ config :webdev2, Webdev2Web.Endpoint,
   #]
  
 # Do not print debug messages in production
+config :logger, level: :info
+
 config :logger,
-  backends: [{LoggerFileBackend, :info},
+  backends: [:console, {LoggerFileBackend, :info},
   {LoggerFileBackend, :error}]
 
-config :logger, :error,
+config :logger, :info,
   path: "/home/simon/webdev2/info.log",
-  level: :error
+  level: :info
 
 config :logger, :error,
   path: "/home/simon/webdev2/error.log",
