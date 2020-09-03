@@ -21,7 +21,7 @@ defmodule Webdev2.MixProject do
   def application do
     [
       mod: {Webdev2.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :logger_file_backend]
     ]
   end
 
@@ -56,7 +56,8 @@ defmodule Webdev2.MixProject do
       {:html_entities, "~> 0.4"},
       {:tzdata, "~> 1.0.3"},
       {:calendar, "~> 1.0.0"},
-      {:auth_me, git: "https://github.com/auspayroll/auth.git" }
+      {:auth_me, git: "https://github.com/auspayroll/auth.git" }, 
+      {:logger_file_backend, "~> 0.0.10"}
     ]
   end
 
