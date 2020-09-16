@@ -28,7 +28,7 @@ defmodule Webdev2Web.Router do
   end
 
   scope "/", Webdev2Web do
-    pipe_through [:browser, :auth, :ensure_auth]
+    pipe_through [:browser]
     get "/", PageController, :index
   end
 
