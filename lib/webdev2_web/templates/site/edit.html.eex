@@ -2,4 +2,12 @@
 
 <%= render "form.html", Map.put(assigns, :action, Routes.site_path(@conn, :update, @site)) %>
 
-<span><%= link "Back", to: Routes.site_path(@conn, :index) %></span>
+
+
+<p>
+
+<hr/>
+
+<iframe width="100%" class="flex-child" style="" frameborder="0" src="<%= Routes.site_path(@conn, :view, @site) %>" title="W3Schools Free Online Web Tutorials"></iframe>
+
+<span><%= link "Back", to: Routes.site_path(@conn, :index) %></span> <span><%= link "Reload Site Contents", to: Routes.site_path(@conn, :reload, @site) %></span>

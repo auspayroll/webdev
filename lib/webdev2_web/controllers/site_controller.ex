@@ -1,6 +1,7 @@
 defmodule Webdev2Web.SiteController do
   use Webdev2Web, :controller
   require Logger
+  require IEx
 
   alias Webdev2.Web
   alias Webdev2.Web.Site
@@ -32,7 +33,6 @@ defmodule Webdev2Web.SiteController do
       sites = Web.search_site(d.q, d.page, current_user(conn).id)
       render(conn, "index.html", sites: sites)
     else
-      IO.inspect changeset.errors
       render(conn, "search.html", changeset: changeset, action: Routes.site_path(conn, :search))
     end
   end
@@ -42,8 +42,6 @@ defmodule Webdev2Web.SiteController do
   end
 
   def search(conn, params) do
-    IO.puts "here"
-    IO.inspect params
     dummy_model = {%SearchForm{}, %{q: :string}}
     changeset = Ecto.Changeset.cast(dummy_model, %{}, [:q])
     changeset = %{ changeset | action: :insert }
@@ -76,8 +74,21 @@ defmodule Webdev2Web.SiteController do
 
   def show(conn, %{"id" => id}) do
     site = Web.get_site!(id, current_user(conn).id)
-    p = Site.paragraphs(site.body)
-    render(conn, "show.html", site: site, p: p)
+    render(conn, "show.html", site: site)
+  end
+
+  def reload(conn, %{"id" => id}) do
+    site = Web.get_site!(id, current_user(conn).id)
+    case Web.reload_site(site) do
+      nil -> 
+        conn
+        |> put_flash(:info, "Error reloading site")
+        |> redirect(to: Routes.site_path(conn, :edit, site))
+      _ -> 
+        conn
+        |> put_flash(:info, "Site reloaded successfully.")
+        |> redirect(to: Routes.site_path(conn, :show, site))
+    end
   end
 
   def view(conn, %{"id" => id}) do

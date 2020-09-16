@@ -11,7 +11,9 @@ config :webdev2,
   ecto_repos: [Webdev2.Repo]
 
 config :auth_me, 
-  ecto_repos: [AuthMe.Repo]
+  ecto_repos: [AuthMe.Repo],
+  start_page: "/p/sites",
+  login_page: "/auth/login"
 
 config :webdev2, :date_format, "%d %b %Y"
 config :auth_me, :date_format, "%d %b %Y"

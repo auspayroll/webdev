@@ -27,7 +27,7 @@ defmodule Webdev2.Web do
   end
 
   def list_sites(id, user_id) do
-    query = from s in Site, where: s.user_id == ^user_id
+    query = from s in Site, where: s.user_id == ^user_id, order_by: [desc: s.inserted_at]
     Paginator.paginate(Repo, query, id)
   end
 
@@ -50,10 +50,18 @@ defmodule Webdev2.Web do
   def update_site(%Site{} = site, attrs) do
       site
       |> Site.changeset(attrs)
-      |> Site.reload_site
       |> Site.apply_defaults
       |> Repo.update()
       |> update_site_vector
+  end
+
+  def reload_site(%Site{} = site) do
+    case Site.body_changeset(site) do
+      nil -> 
+        nil
+      changeset -> 
+        Repo.update(changeset)
+    end
   end
 
   def test() do

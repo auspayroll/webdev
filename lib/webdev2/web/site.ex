@@ -32,9 +32,24 @@ defmodule Webdev2.Web.Site do
   @doc false
   def changeset(site, attrs) do
     site
-    |> cast(attrs, [:tags, :title, :url, :body, :description])
+    |> cast(attrs, [:tags, :title, :description, :url])
     |> validate_required([:url])
     |> valid_string?([:body])
+  end
+
+  def body_changeset(site) do
+    case site.url do 
+      nil -> nil
+      url -> 
+        case fetch_web_site(url) do
+          {:ok, %Response{ status_code: 200, body: body }} -> 
+            site
+            |> cast(%{body: body}, [:body])
+            |> validate_required([:body])
+          _ -> 
+            nil
+        end
+    end
   end
 
   def apply_default(changeset, field) do
@@ -235,23 +250,6 @@ defmodule Webdev2.Web.Site do
     #match url("http://....") pattern
   end
 
-  def reload_site(site_changeset) do
-    if site_changeset.valid? && site_changeset.changes != %{} do 
-      url = Map.get(site_changeset.changes, :url) || site_changeset.data.url
-      case fetch_web_site(url) do
-        {:ok, %Response{ status_code: 200, body: body }} -> 
-          Ecto.Changeset.put_change(site_changeset, :body, body)
-        {:warning, _} ->    
-         Ecto.Changeset.put_change(site_changeset, :body, "")
-        {:error, reason } -> 
-          IO.inspect reason
-          site_changeset
-          Ecto.Changeset.put_change(site_changeset, :body, "")
-      end
-    else 
-      site_changeset
-    end
-  end
 
   def remove_control_chars(body) do
     body
@@ -262,17 +260,25 @@ defmodule Webdev2.Web.Site do
   def http_fetch_site(url) do
     if url do
       IO.puts "http_fetch_site " <> url
-      case HTTPoison.get(url) do
+      headers = [{"Accept", "text/html"},
+      {"User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"},
+      # {"Accept-Encoding", "gzip, deflate, br"},
+      {"Accept-Language", "en-US,en;q=0.9"},
+      {"Cache-Control", "no-cache"}, 
+      {"Pragma", "no-cache"},
+      {"Connection", "keep-alive"}  ]
+      case HTTPoison.get(url, headers) do
         {:ok, %HTTPoison.Response{ status_code: status_code, headers: headers, body: body }} ->
+          # <meta http-equiv="refresh" content="4; URL='https://ahrefs.com/blog/301-redirects/'" /> 
+          #check for client redirects
           case status_code do
             200 -> 
-              IO.puts "response OK"
-              if String.valid? body do 
-                { :ok,  %Response{status_code: 200, headers: headers, body: body} }
+              if !String.valid? body do
+                { :warning,  %Response{status_code: 501, headers: headers, body: "Error: Invalid UTF-8 encoding" } }
               else 
-                IO.puts "invalid utf string: status code " <> to_string(200)
-                { :ok,  %Response{status_code: status_code, headers: headers, body: ""} }
+                { :ok,  %Response{status_code: 200, headers: headers, body: body } }
               end
+              
             _ -> 
               IO.puts "invalid response: status code " <> to_string(status_code)
               { :warning,  %Response{status_code: status_code, headers: headers, body: ""} }
@@ -389,16 +395,22 @@ defmodule Webdev2.Web.Site do
 end
 
 
-defmodule Util do
-  def valid_utf8?(<<_::utf8, rest::binary>>), do: valid_utf8?(rest)
-  def valid_utf8?(<<>>), do: true
-  def valid_utf8?(_), do: false
+defmodule Utf do
+  def valid?(<<_::utf8, rest::binary>>), do: valid?(rest)
+  def valid?(<<>>), do: true
+  def valid?(_), do: false
 
   def test do
     for binary <- [<<0>>, <<239, 191, 191>>, <<128>>] do
       IO.inspect {binary, String.valid?(binary), Util.valid_utf8?(binary)}
     end
   end
+
+  def filter(utf_string), do: filter(utf_string, <<>>, <<>>)
+  def filter(<<head::utf8, rest::binary>>, valid, invalid), do: filter(rest, valid <> <<head>>, invalid)
+  def filter(<<error_byte, rest::binary>>, valid, invalid), do: filter(rest, valid, invalid <> <<error_byte>>)
+  def filter(<<>>, valid, invalid), do: [valid, invalid]
+
 end
 
 

@@ -27,12 +27,15 @@ defmodule Webdev2Web.Router do
     match :*, "/:any", Router, :any
   end
 
+  scope "/", Webdev2Web do
+    pipe_through [:browser, :auth, :ensure_auth]
+    get "/", PageController, :index
+  end
+
   scope "/p", Webdev2Web do
     pipe_through [:browser, :auth, :ensure_auth]
-
-    get "/", PageController, :index
-
     get "/view/:id", SiteController, :view 
+    get "/reload/:id", SiteController, :reload
     #get "/sites/:id", SiteController, :pag_index
     resources "/sites", SiteController
     get "/addsites", SiteController, :add_sites

@@ -16,12 +16,11 @@
 <%= @current_user.username %>
 <%= for site <- @sites.list do %>
 <div class="listing">
-<div><strong><%= site.title %></strong></div>
+<div><u><%= site.title %></u></div>
 <div><%= site.description %></div>
 <div><a href="<%= site.url %>" style="font-size:smaller"><%= site.url %></a>
 </div>
 <div class="control-links"><%= link "Edit", to: Routes.site_path(@conn, :edit, site) %> &nbsp; 
-<%= link "Text", to: Routes.site_path(@conn, :show, site) %> &nbsp; 
 <%= link "Cached", to: Routes.site_path(@conn, :view, site) %> 
 <span style="float:right"><%= format_date(site.inserted_at) %></span>
 </div>
@@ -58,6 +57,5 @@
   </tbody>
 </table>
 --->
-<span><%= link "New Site", to: Routes.site_path(@conn, :new) %></span>
 
 <%= Paginator.Helper.render(@conn, @sites, class: "paginator-list") %>

@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
     <style>
+      html, body {
+        height: 100%;
+      }
       .paginator-list li[disabled] a {
         opacity: .4;
         pointer-events: none;
@@ -15,11 +18,23 @@
 
       ul.paginator-list { text-align: center; }
       ul.paginator-list li { display: inline-block; margin: 6px; }
+
+      .flex-container-col{
+        min-height: 100%;
+        display:flex;
+        flex-direction:column;
+      }
+
+      .flex-child{
+        flex:1;
+      }
+
     </style>
   </head>
   <body>
+    <div class="flex-container-col">
     <header>
-      <section class="container">
+      <section>
       <%=if @current_user do %>
         <%= link "Index", to: Routes.site_path(@conn, :index) %> 
         <%= link "Add Site", to: Routes.site_path(@conn, :new) %> 
@@ -28,10 +43,11 @@
       <% end %>
       </section>
     </header>
-    <main role="main" class="container">
+    <main role="main" class="container flex-container-col" style="flex:1">
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
       <%= @inner_content %>
     </main>
+    </div>
   </body>
 </html>

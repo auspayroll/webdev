@@ -29,3 +29,36 @@
 .alert:empty {
   display: none;
 }
+
+header > section{
+  justify-content: space-around;
+  background: #31708f;
+  padding: 10px;
+
+} 
+
+header > section > a {
+  color: white;
+}
+
+body {    
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.paginator-list{
+  margin-top:40px;
+  background: #e6e6e6;
+}
+
+.paginator-list a{
+  margin:8px;
+}
+
+body{
+  font-size: 1.8em;
+}
+
+
+
+
